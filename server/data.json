@@ -1,0 +1,29 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "book",
+      "price": 3000
+    },
+    {
+      "id": "2",
+      "name": "pen",
+      "price": 200
+    },
+    {
+      "id": "4",
+      "name": "shoes",
+      "price": 960
+    },
+    {
+      "id": "d117",
+      "name": "fastsss",
+      "price": 500
+    },
+    {
+      "id": "4abf",
+      "name": "omar",
+      "price": 500
+    }
+  ]
+}
