@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useFetch } from "../custom-hook/useFetch";
+import Loading from "./Loading";
 
 export default function ProductList() {
   const baseUrl = "http://localhost:3000/products";
@@ -13,10 +14,13 @@ export default function ProductList() {
 
   const fetchProduct = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(baseUrl);
       setProducts(response.data);
     } catch (error) {
       setIsError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -34,37 +38,43 @@ export default function ProductList() {
 
   return (
     <div className="container mt-5">
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Product Name</th>
-            <th>Product Price</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((prod) => (
-            <tr key={prod.id}>
-              <td>{prod.id}</td>
-              <td>{prod.name}</td>
-              <td>{prod.price}</td>
-              <td>
-                <Link to={`/products/${prod.id}`}>
-                  <i className="fs-5 mx-2 bi bi-eye-fill text-success"></i>
-                </Link>
-                <Link to={`/products/${prod.id}/edit`}>
-                  <i className="fs-5 mx-2 bi bi-pencil-square text-info"></i>
-                </Link>
-                <i
-                  onClick={() => deleteProduct(prod.id)}
-                  className="fs-5 mx-2 bi bi-trash3-fill text-danger"
-                ></i>
-              </td>
+      {isLoading && <Loading />}
+      {isError && (
+        <div className="alert alert-danger">Failed: {isError.message}</div>
+      )}
+      {!isLoading && !isError && (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product Name</th>
+              <th>Product Price</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {products.map((prod) => (
+              <tr key={prod.id}>
+                <td>{prod.id}</td>
+                <td>{prod.name}</td>
+                <td>{prod.price}</td>
+                <td>
+                  <Link to={`/products/${prod.id}`}>
+                    <i className="fs-5 mx-2 bi bi-eye-fill text-success"></i>
+                  </Link>
+                  <Link to={`/products/${prod.id}/edit`}>
+                    <i className="fs-5 mx-2 bi bi-pencil-square text-info"></i>
+                  </Link>
+                  <i
+                    onClick={() => deleteProduct(prod.id)}
+                    className="fs-5 mx-2 bi bi-trash3-fill text-danger"
+                  ></i>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 }
